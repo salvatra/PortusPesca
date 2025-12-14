@@ -33,7 +33,7 @@ CREATE TABLE Tripulante (
     Estado ENUM('Ativo', 'Inativo') NOT NULL DEFAULT 'Ativo',
     Rua VARCHAR(150),
     Numero INT,
-    CodPostal INT,
+    CodPostal VARCHAR(10),
     Localidade VARCHAR(150)
 );
 
