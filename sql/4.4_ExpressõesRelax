@@ -1,0 +1,83 @@
+π ID, PortoOrigem, PortoDestino, Estado(Viagem)
+
+
+
+π ID, PortoOrigem, PortoDestino, Estado (
+    σ Estado = 'Em Curso' (Viagem)
+)
+
+
+
+π Nome, Cargo, Estado (
+    σ (Tripulante.ID = ? AND DataSaida = 'NULL') (
+        Tripulante ⨝ (Tripulante.ID = TripulanteViagem.Tripulante) TripulanteViagem
+)
+)
+
+
+
+π Nome, Cargo, ViagemID, PortoOrigem, PortoDestino, DataPartida (
+-- Passo 1: Selecionar o ID do Tripulante 
+   (σ ID = ? (Tripulante))
+   
+-- Passo 2: Juntar com TripulanteViagem
+   ⨝ (ID = TripulanteViagem.Tripulante) TripulanteViagem
+   
+--  Passo 3: Juntar com Viagem
+   ⨝ (TripulanteViagem.Viagem = ViagemID) (ρ ViagemID←ID Viagem)
+)
+
+
+
+-- Passo 1: Calcular apenas as Receitas por Viagem
+TotalReceitas = γ Viagem; sum(Valor)→SomaReceitas (
+    σ Tipo = 'Receita' (Financeiro)
+)
+-- Passo 2: Calcular apenas as Despesas por Viagem
+TotalDespesas = γ Viagem; sum(Valor)→SomaDespesas (
+    σ Tipo = 'Despesa' (Financeiro)
+)
+-- Passo 3: Juntar as tabelas e calcular o Saldo (Receita - Despesa)
+RelatorioFinal = π Viagem, SomaReceitas, SomaDespesas, (SomaReceitas - SomaDespesas)→Saldo (
+    TotalReceitas ⨝ TotalDespesas
+)
+-- Executar a query final
+RelatorioFinal
+
+
+
+-- Passo 1: Junção Condicional (Associar Capturas às Zonas pelo ID correto)
+DadosUnificados = Captura ⨝ Captura.ZonaPesca = ZonaPesca.ID ZonaPesca
+
+-- Passo 2: Estatísticas de Quantidade por Zona e Espécie
+RelatorioSemanal = γ Nome, NomeComum; sum(Quantidade)→TotalKg, count(Captura.ID)→NumRegistos (
+    DadosUnificados
+)
+RelatorioSemanal
+
+
+
+-- Ramo 1: Dados Logísticos 
+RamoLogistica = π Viagem.ID, DataPartida, PortoOrigem, PortoDestino, Nome→NomeNavio, Tipo→TipoNavio (
+    σ Viagem.ID = ? (Viagem) ⨝ Viagem.Embarcacao = Embarcacao.ID Embarcacao
+)
+
+-- Ramo 2: Dados de Recursos Humanos 
+RamoRH = π Cargo, Nome→NomeTripulante, CedulaMarinha, Tripulante, Viagem (
+    σ Viagem = ? (TripulanteViagem) ⨝ TripulanteViagem.Tripulante = Tripulante.ID Tripulante
+)
+
+-- Ramo 3: Dados de Produção 
+RamoProducao = π NomeComum→Especie, Quantidade, Nome→NomeZona, Viagem (
+    σ Viagem = ? (Captura) ⨝ Captura.ZonaPesca = ZonaPesca.ID ZonaPesca
+)
+
+-- Junção Intermédia 
+UniaoLogisticaRH = RamoLogistica ⨝ RamoLogistica.ID = RamoRH.Viagem RamoRH
+
+-- Junção Final
+DossierFinal = π ID, NomeNavio, DataPartida, NomeTripulante, Cargo, Especie, Quantidade, NomeZona (
+    UniaoLogisticaRH ⨝ UniaoLogisticaRH.ID = RamoProducao.Viagem RamoProducao
+)
+
+DossierFinal

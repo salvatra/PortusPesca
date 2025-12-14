@@ -11,8 +11,8 @@ INSERT INTO Embarcacao (ID, Nome, Tipo, Altura, Largura, Comprimento, CapCarga) 
     ('AV567890', 'Maré Alta', 'Cerqueiro', 11.00, 4.80, 38.00, 90.00),
     ('PT678901', NULL, 'Emalhador', 9.50, 4.00, 32.00, 70.00);
 
--- Povoar tabela EmbarcacaoPortosAut
-INSERT INTO EmbarcacaoPortosAut (Embarcacao, Porto) VALUES
+-- Povoar tabela PortosAutorizados
+INSERT INTO PortosAutorizados (Embarcacao, Porto) VALUES
     ('AV123456', 'Aveiro'),
     ('AV123456', 'Portimão'),
     ('AV123456', 'Figueira da Foz'),
@@ -191,4 +191,3 @@ INSERT INTO TripulanteViagem (Tripulante, Viagem, Cargo, DataEntrada, DataSaida)
     -- Viagem 7 (Cancelada - tripulação desvinculada no mesmo dia)
     (1, 7, 'Capitão', '2024-07-10', '2024-07-10'),
     (3, 7, 'Marinheiro', '2024-07-10', '2024-07-10');
-

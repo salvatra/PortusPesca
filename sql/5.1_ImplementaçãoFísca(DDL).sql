@@ -14,7 +14,7 @@ CREATE TABLE Embarcacao (
 );
 
 
-CREATE TABLE EmbarcacaoPortosAut (
+CREATE TABLE PortosAutorizados (
     Embarcacao VARCHAR(8) NOT NULL,
     Porto VARCHAR(100) NOT NULL,
     PRIMARY KEY (Embarcacao, Porto),

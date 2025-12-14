@@ -28,7 +28,7 @@ GRANT SELECT, INSERT, UPDATE ON PortusPesca.ViagemZonaPesca TO 'g_oficial';
 
 -- Permissões de Leitura Geral (Comum a Oficiais e Tripulação)
 GRANT SELECT ON PortusPesca.Embarcacao TO 'g_oficial', 'g_tripulacao';
-GRANT SELECT ON PortusPesca.EmbarcacaoPortosAut TO 'g_oficial', 'g_tripulacao';
+GRANT SELECT ON PortusPesca.PortosAutorizados TO 'g_oficial', 'g_tripulacao';
 GRANT SELECT ON PortusPesca.ZonaPesca TO 'g_oficial', 'g_tripulacao';
 GRANT SELECT ON PortusPesca.Nacionalidade TO 'g_oficial', 'g_tripulacao';
 
